@@ -1,4 +1,6 @@
 define(function(require) {
+    var _ = require('flux/lib/lodash');
+
     var BaseGameMode = require('./gamemodes/base');
     var Keyboard = require('./input/keyboard');
 
@@ -61,7 +63,7 @@ define(function(require) {
         loop: function() {
             var self = this;
             this.tick();
-            this.render();
+            this.draw();
 
             if (this.running) {
                 requestFrame(this.bound_loop, this.canvas);
@@ -70,20 +72,19 @@ define(function(require) {
 
         // Process one frame of behavior.
         tick: function() {
-            for (var k = this.gameModes.length - 1; k >= 0; k--) {
-                var gameMode = this.gameModes[k];
+            _.forEach(this.gameModes, function(gameMode) {
                 gameMode.tick(this);
 
                 if (gameMode.blockTick) {
-                    break;
+                    return false;
                 }
-            }
+            }, this);
 
             this.kb.tick(this);
         },
 
-        // Render the screen.
-        render: function() {
+        // Draw the screen.
+        draw: function() {
             this.ctx.save();
             this.ctx.clearRect(0, 0, this.width, this.height);
 
@@ -94,23 +95,13 @@ define(function(require) {
 
             this.ctx.restore();
 
-            // Find the last GameMode that blocks rendering.
-            var lastToRender = 0;
-            for (var k = 0; k < this.gameModes.length; k++) {
-                if (this.gameModes[k].blockRender) {
-                    lastToRender = k;
-                    break;
-                }
-            }
-
-            // Render from the top of the stack to the last GameMode that blocks
+            // Draw from the top of the stack to the last GameMode that blocks
             // rendering.
-            for (var k = this.gameModes.length - 1; k >= lastToRender; k--) {
-                this.gameModes[k].render(this, this.ctx);
+            var lastToRender = _.find(this.gameModes, 'blockDraw') || 0;
+            for (var i = this.gameModes.length - 1; i >= lastToRender; i--) {
+                this.gameModes[i].draw(this, this.ctx);
             }
         },
-
-
 
         addEntity: function(entity) {
             this.gameModes[this.gameModes.length - 1].addEntity(entity);

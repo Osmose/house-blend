@@ -1,5 +1,5 @@
 define(function(require) {
-    // Positional
+    // Graphical
     return {
         initialize: function(options) {
             this.x = options.x || 0;
@@ -7,8 +7,7 @@ define(function(require) {
         },
 
         move: function(dx, dy) {
-            this.x += dx;
-            this.y += dy;
+
         }
     };
 });

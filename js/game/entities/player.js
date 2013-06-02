@@ -1,14 +1,14 @@
 define(function(require) {
     var Entity = require('flux/entities/entity');
-    var Collidable = require('flux/entities/components/collidable');
-    var Graphical = require('flux/entities/components/graphical');
+    //var Collidable = require('flux/entities/components/collidable');
+    //var Graphical = require('flux/entities/components/graphical');
     var Positional = require('flux/entities/components/positional');
 
     return Entity('Player', {
-        components: [Graphical, Positional, Collidable],
+        components: [Positional],
 
         // Graphical properties
-        graphic: TiledGraphic('img/player.png', 16, 16, {
+        /*graphic: TiledGraphic(require('image!img/player.png'), 16, 16, {
             up: 0,
             down: 2,
             left: 4,
@@ -17,7 +17,7 @@ define(function(require) {
             move_down: [2, 8, 3, 8],
             move_left: [4, 8, 5, 8],
             move_right: [6, 8, 7, 8]
-        }),
+        }),*/
 
         // Collidable properties
         hitbox: {x: 2, y: 2, w: 12, h: 12},
@@ -66,6 +66,11 @@ define(function(require) {
 
             var tile = (this.walking ? 'walk_' : '') + this.direction;
             this.currentTile = tile;
+        },
+
+        draw: function(engine, gamemode, ctx) {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(this.x, this.y, 10, 10);
         }
     });
 });

@@ -1,5 +1,5 @@
 define(function(require) {
-    function TiledGraphic(image, tileWidth, tileHeight, xGap, yGap) {
+    function TiledGraphic(url, tileWidth, tileHeight, xGap, yGap) {
         this.image = image;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
